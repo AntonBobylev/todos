@@ -11,25 +11,7 @@ import {HashRouter, Routes, Route, NavLink} from 'react-router-dom';
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 import Register from './Register';
 import firebaseApp from './firebase';
-
-const date1 = new Date (2021, 7, 19, 14,5);
-const date2 = new Date (2021, 7, 19, 15,23);
-
-const initialData = [{
-    title: 'Изучить React',
-    desc: 'Да поскорее!',
-    image: '',
-    done: true,
-    createdAt: date1.toLocaleString(),
-    key: date1.getTime()
-}, {
-    title: 'Написать первое React-приложение',
-    desc: 'Список запланированных дел',
-    image: '',
-    done: false,
-    createdAt: date2.toLocaleString(),
-    key: date2.getTime()
-}];
+import {getList, setDone, del} from './api';
 
 export default class App extends Component
 {
@@ -38,7 +20,7 @@ export default class App extends Component
         super(props);
 
         this.state = {
-            data: initialData,
+            data: [],
             showMenu: false,
             currentUser: undefined
         };
@@ -130,7 +112,9 @@ export default class App extends Component
                         <Route
                             path="/add"
                             element={
-                                <TodoAdd add={this.add}/>
+                                <TodoAdd add={this.add}
+                                         currentUser={this.state.currentUser}
+                                />
                             }
                         />
                         <Route
@@ -163,8 +147,10 @@ export default class App extends Component
         );
     }
 
-    setDone(key)
+    async setDone(key)
     {
+        await setDone(this.state.currentUser, key);
+
         const deed = this.state.data.find((current) => current.key === key);
         if (deed) {
             deed.done = true;
@@ -173,8 +159,10 @@ export default class App extends Component
         this.setState((state) => ({}));
     }
 
-    delete(key)
+    async delete(key)
     {
+        await del(this.state.currentUser, key);
+
         const newData = this.state.data.filter(
             (current) => current.key !== key
         );
@@ -197,14 +185,19 @@ export default class App extends Component
 
     getDeed(key)
     {
-        key = +key;
-
         return this.state.data.find((current) => current.key === key);
     }
 
-    authStateChanged(user)
+    async authStateChanged(user)
     {
         this.setState((state) => ({currentUser: user}));
+
+        if (user) {
+            const newData = await getList(user);
+            this.setState((state) => ({data: newData}));
+        } else {
+            this.setState((state) => ({data: []}));
+        }
     }
 
     componentDidMount()

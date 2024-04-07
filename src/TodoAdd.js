@@ -1,5 +1,6 @@
 import {Component} from 'react';
 import {Navigate} from 'react-router-dom';
+import {add} from './api';
 
 export default class TodoAdd extends Component
 {
@@ -53,7 +54,7 @@ export default class TodoAdd extends Component
         }
     }
 
-    handleFormSubmit(evt)
+    async handleFormSubmit(evt)
     {
         evt.preventDefault();
 
@@ -62,9 +63,9 @@ export default class TodoAdd extends Component
 
         newDeed.done = false;
         newDeed.createdAt = date.toLocaleString();
-        newDeed.key = date.getTime();
 
-        this.props.add(newDeed);
+        const addedDeed = await add(this.props.currentUser, newDeed);
+        this.props.add(addedDeed);
 
         this.setState((state) => ({redirect: true}));
     }
