@@ -25,7 +25,11 @@ export default class App extends Component
     constructor(props)
     {
         super(props);
-        this.data = initialData;
+
+        this.state = {data: initialData};
+
+        this.setDone = this.setDone.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     render()
@@ -40,9 +44,28 @@ export default class App extends Component
                     </div>
                 </nav>
                 <main className="content px-6 mt-6">
-                    <TodoList list={this.data} />
+                    <TodoList list={this.state.data} setDone={this.setDone} delete={this.delete} />
                 </main>
             </div>
         );
+    }
+
+    setDone(key)
+    {
+        const deed = this.state.data.find((current) => current.key === key);
+        if (deed) {
+            deed.done = true;
+        }
+
+        this.setState((state) => ({}));
+    }
+
+    delete(key)
+    {
+        const newData = this.state.data.filter(
+            (current) => current.key !== key
+        );
+
+        this.setState((state) => ({data: newData}))
     }
 };
