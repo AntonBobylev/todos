@@ -4,6 +4,9 @@ import TodoList from './TodoList';
 import TodoAdd from './TodoAdd';
 import TodoDetail from './TodoDetail';
 
+import Logout from './Logout';
+import Login from './Login';
+
 import {HashRouter, Routes, Route, NavLink} from 'react-router-dom';
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 import Register from './Register';
@@ -91,15 +94,26 @@ export default class App extends Component
                                 </NavLink>
                             }
                             {!this.state.currentUser && (
-                                <NavLink to="/register"
+                                <NavLink to="/login"
                                          className={({isActive}) =>
                                              'navbar-item' + (isActive ? ' is active' : '')
                                          }
                                 >
-                                    Зарегистрироваться
+                                    Войти
                                 </NavLink>
                             )}
                         </div>
+
+                        {this.state.currentUser && (
+                            <div className="navbar-end">
+                                <NavLink to="/logout"
+                                         className={ ({isActive}) => 'navbar-item' + (isActive ? ' is-active' : '')}
+                                 >
+                                    Выйти
+                                </NavLink>
+
+                            </div>
+                        )}
                     </div>
                 </nav>
                 <main className="content px-6 mt-6">
@@ -124,11 +138,23 @@ export default class App extends Component
                             element={
                                 <TodoDetail getDeed={this.getDeed}/>
                             }
-                        /><
-                        Route
+                        />
+                        <Route
                             path="/register"
                             element={
                                 <Register currentUser={this.state.currentUser} />
+                            }
+                        />
+                        <Route
+                            path="/logout"
+                            element={
+                                <Logout currentUser={this.state.currentUser} />
+                            }
+                        />
+                        <Route
+                            path="/login"
+                            element={
+                                <Login currentUser={this.state.currentUser} />
                             }
                         />
                     </Routes>
