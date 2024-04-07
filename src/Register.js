@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import {Navigate} from 'react-router-dom';
-import {register} from './auth';
+import {register} from './api';
 
 export default class Register extends Component
 {
