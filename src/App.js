@@ -5,6 +5,9 @@ import TodoAdd from './TodoAdd';
 import TodoDetail from './TodoDetail';
 
 import {HashRouter, Routes, Route, NavLink} from 'react-router-dom';
+import {getAuth, onAuthStateChanged} from "firebase/auth";
+import Register from './Register';
+import firebaseApp from './firebase';
 
 const date1 = new Date (2021, 7, 19, 14,5);
 const date2 = new Date (2021, 7, 19, 15,23);
@@ -31,7 +34,11 @@ export default class App extends Component
     {
         super(props);
 
-        this.state = {data: initialData, showMenu: false};
+        this.state = {
+            data: initialData,
+            showMenu: false,
+            currentUser: undefined
+        };
 
         this.setDone = this.setDone.bind(this);
         this.delete = this.delete.bind(this);
@@ -39,6 +46,8 @@ export default class App extends Component
 
         this.showMenu = this.showMenu.bind(this);
         this.getDeed = this.getDeed.bind(this);
+
+        this.authStateChanged = this.authStateChanged.bind(this);
     }
 
     render()
@@ -52,7 +61,11 @@ export default class App extends Component
                                      "navbar-item is-uppercase" + (isActive ? " is-active" : "")
                                  }
                         >
-                            Todos
+                            {
+                                this.state.currentUser
+                                    ? this.state.currentUser.email
+                                    : 'Todos'
+                            }
                         </NavLink>
                         <a href="/"
                            className={this.state.showMenu ? "navbar-burger is-active" : "navbar-burger"}
@@ -68,13 +81,24 @@ export default class App extends Component
                          onClick={this.showMenu}
                     >
                         <div className="navbar-start">
-                            <NavLink to="/add"
-                                     className={({isActive}) =>
-                                         "navbar-item" + (isActive ? " is-active" : "")
-                                     }
-                            >
-                                Создать дело
-                            </NavLink>
+                            {this.state.currentUser &&
+                                <NavLink to="/add"
+                                         className={({isActive}) =>
+                                             "navbar-item" + (isActive ? " is-active" : "")
+                                         }
+                                >
+                                    Создать дело
+                                </NavLink>
+                            }
+                            {!this.state.currentUser && (
+                                <NavLink to="/register"
+                                         className={({isActive}) =>
+                                             'navbar-item' + (isActive ? ' is active' : '')
+                                         }
+                                >
+                                    Зарегистрироваться
+                                </NavLink>
+                            )}
                         </div>
                     </div>
                 </nav>
@@ -99,6 +123,12 @@ export default class App extends Component
                             path="/:key"
                             element={
                                 <TodoDetail getDeed={this.getDeed}/>
+                            }
+                        /><
+                        Route
+                            path="/register"
+                            element={
+                                <Register currentUser={this.state.currentUser} />
                             }
                         />
                     </Routes>
@@ -144,5 +174,15 @@ export default class App extends Component
         key = +key;
 
         return this.state.data.find((current) => current.key === key);
+    }
+
+    authStateChanged(user)
+    {
+        this.setState((state) => ({currentUser: user}));
+    }
+
+    componentDidMount()
+    {
+        onAuthStateChanged(getAuth(firebaseApp), this.authStateChanged);
     }
 };
