@@ -2,6 +2,7 @@ import {Component} from 'react';
 
 import TodoList from './TodoList';
 import TodoAdd from './TodoAdd';
+import TodoDetail from './TodoDetail';
 
 import {HashRouter, Routes, Route, NavLink} from 'react-router-dom';
 
@@ -37,6 +38,7 @@ export default class App extends Component
         this.add = this.add.bind(this);
 
         this.showMenu = this.showMenu.bind(this);
+        this.getDeed = this.getDeed.bind(this);
     }
 
     render()
@@ -93,6 +95,12 @@ export default class App extends Component
                                 <TodoAdd add={this.add}/>
                             }
                         />
+                        <Route
+                            path="/:key"
+                            element={
+                                <TodoDetail getDeed={this.getDeed}/>
+                            }
+                        />
                     </Routes>
                 </main>
             </HashRouter>
@@ -129,5 +137,12 @@ export default class App extends Component
         evt.preventDefault();
 
         this.setState((state) => ({showMenu: !state.showMenu}));
+    }
+
+    getDeed(key)
+    {
+        key = +key;
+
+        return this.state.data.find((current) => current.key === key);
     }
 };
