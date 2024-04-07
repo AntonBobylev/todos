@@ -1,10 +1,13 @@
 import {Component} from 'react';
+import {Navigate} from 'react-router-dom';
 
 export default class TodoAdd extends Component
 {
     constructor(props)
     {
         super(props);
+
+        this.state = {redirect: false};
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleDescChange = this.handleDescChange.bind(this);
@@ -62,13 +65,16 @@ export default class TodoAdd extends Component
         newDeed.key = date.getTime();
 
         this.props.add(newDeed);
-        this.clearFormData();
 
-        evt.target.reset();
+        this.setState((state) => ({redirect: true}));
     }
 
     render()
     {
+        if (this.state.redirect) {
+            return <Navigate to="/" />;
+        }
+
         return (
             <section>
                 <h1>Создание нового дела</h1>
