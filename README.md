@@ -9,7 +9,7 @@ to install additional dependencies:
 ## Project configuration
 
 There is '.env.example' file which is a sample of '.env.local' \
-Please, copy it and rename to 'env.local' and fill a configuration lines. \
+Please, copy it and rename to 'env.local' and fill a configuration lines.
 
 ## Project start
 
