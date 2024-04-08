@@ -9,6 +9,11 @@ export default function TodoDetail(props)
         return <Navigate to="/login" replace />;
     }
 
+    if (!deed) {
+        // nothing found
+        return <Navigate to="/" replace />;
+    }
+
     return (
         <section>
             {deed.done &&
