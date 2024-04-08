@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import {Navigate} from 'react-router-dom';
-import {login} from './api';
+import {login} from '../backend/api';
 
 export default class Login extends Component
 {

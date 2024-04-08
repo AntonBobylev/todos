@@ -1,17 +1,17 @@
 import {Component} from 'react';
 
-import TodoList from './TodoList';
-import TodoAdd from './TodoAdd';
-import TodoDetail from './TodoDetail';
+import TodoList from './todos/TodoList';
+import TodoAdd from './todos/TodoAdd';
+import TodoDetail from './todos/TodoDetail';
 
-import Logout from './Logout';
-import Login from './Login';
+import Logout from './components/Logout';
+import Login from './components/Login';
 
 import {HashRouter, Routes, Route, NavLink} from 'react-router-dom';
 import {getAuth, onAuthStateChanged} from "firebase/auth";
-import Register from './Register';
-import firebaseApp from './firebase';
-import {getList, setDone, del} from './api';
+import Register from './components/Register';
+import firebaseApp from './backend/firebase';
+import {getList, setDone, del} from './backend/api';
 
 export default class App extends Component
 {
