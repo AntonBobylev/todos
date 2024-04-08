@@ -8,12 +8,18 @@ export default class TodoAdd extends Component
     {
         super(props);
 
-        this.state = {redirect: false};
+        this.state = {
+            redirect: false,
+            deedTitleError: '',
+            deedDescError: ''
+        };
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleDescChange = this.handleDescChange.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+
+        this.resetErrorMessages = this.resetErrorMessages.bind(this);
 
         this.clearFormData();
     }
@@ -58,6 +64,10 @@ export default class TodoAdd extends Component
     {
         evt.preventDefault();
 
+        if (!this.validate()) {
+            return;
+        }
+
         const newDeed = {...this.formData},
             date = new Date();
 
@@ -68,6 +78,37 @@ export default class TodoAdd extends Component
         this.props.add(addedDeed);
 
         this.setState((state) => ({redirect: true}));
+    }
+
+    resetErrorMessages()
+    {
+        this.setState((state) => ({
+            errorTitle: '',
+            errorDesc: ''
+        }));
+    }
+
+    validate()
+    {
+        this.resetErrorMessages();
+
+        if (!this.formData.title) {
+            this.setState((state) => ({
+                errorTitle: 'Поле заголовка не заполнено'
+            }));
+
+            return false;
+        }
+
+        if (!this.formData.desc) {
+            this.setState((state) => ({
+                errorDesc: 'Поле примечания не заполнено'
+            }));
+
+            return false;
+        }
+
+        return true;
     }
 
     render()
@@ -89,12 +130,24 @@ export default class TodoAdd extends Component
                         <div className="control">
                             <input className="input" onChange={this.handleTitleChange} />
                         </div>
+                        {
+                            this.state.errorTitle &&
+                                <p className="help is-danger">
+                                    {this.state.errorTitle}
+                                </p>
+                        }
                     </div>
                     <div className="field">
                         <label className="label">Примечание</label>
                         <div className="control">
                             <textarea className="textarea" onChange={this.handleDescChange} />
                         </div>
+                        {
+                            this.state.errorDesc &&
+                            <p className="help is-danger">
+                                {this.state.errorDesc}
+                            </p>
+                        }
                     </div>
                     <div className="field">
                         <div className="file">
@@ -117,6 +170,10 @@ export default class TodoAdd extends Component
                             <input type="reset"
                                    className="button is-link is-light"
                                    value="Сброс"
+                                   onClick={() => {
+                                       this.resetErrorMessages();
+                                       this.clearFormData();
+                                   }}
                             />
                         </div>
                         <div className="control">
