@@ -54,7 +54,6 @@ export default class Register extends Component
             if (typeof result !== 'object') {
                 this.showErrorMessage(result);
             }
-
         }
     }
 
