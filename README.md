@@ -6,6 +6,11 @@ to install additional dependencies:
 
 ### `npm install`
 
+## Project configuration
+
+There is '.env.example' file which is a sample of '.env.local' \
+Please, copy it and rename to 'env.local' and fill a configuration lines. \
+
 ## Project start
 
 In the project directory, you can run:
