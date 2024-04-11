@@ -1,5 +1,5 @@
 import {Navigate} from 'react-router-dom';
-import TodoItem from "./TodoItem/TodoItem";
+import TodoItem from "./TodoItem";
 
 export default function TodoList (props) {
     if (!props.currentUser) {
